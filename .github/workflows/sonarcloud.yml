@@ -1,0 +1,22 @@
+name: SonarCloud workflow
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    types: [opened, synchronize, reopened]
+    
+jobs:
+  sonarqube:
+    name: SonarQube
+    runs-on: ubuntu-latest  # ใช้ Ubuntu แทน Windows เพื่อลดปัญหาการติดตั้ง
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # ต้องเป็น 0 เพื่อให้ Sonar วิเคราะห์โค้ดอย่างถูกต้อง
+          
+      - name: SonarQube Scan
+        uses: SonarSource/sonarqube-scan-action@v4
+        env:
+          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
